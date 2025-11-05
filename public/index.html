@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="emotionApp">
+<head>
+  <meta charset="UTF-8" />
+  <title>Emotion Analyzer</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="app.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      padding: 24px;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    h1 {
+      margin-top: 0;
+      text-align: center;
+      font-size: 24px;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      background-color: #e0e7ff;
+      font-size: 12px;
+    }
+    .card {
+      border: 1px solid #dddddd;
+      border-radius: 4px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+    input[type="text"],
+    input[type="password"],
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 8px;
+      border-radius: 4px;
+      border: 1px solid #cccccc;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn-primary {
+      background-color: #2563eb;
+      color: #ffffff;
+    }
+    .btn-secondary {
+      background-color: #6b7280;
+      color: #ffffff;
+    }
+    .btn-small {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+    .error {
+      color: #b91c1c;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+    th,
+    td {
+      border: 1px solid #e5e7eb;
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background-color: #f3f4f6;
+    }
+    .emotion-positive {
+      color: #15803d;
+      font-weight: bold;
+    }
+    .emotion-negative {
+      color: #b91c1c;
+      font-weight: bold;
+    }
+    .emotion-neutral {
+      color: #4b5563;
+      font-weight: bold;
+    }
+    .emotion-mixed {
+      color: #92400e;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body ng-controller="MainController as main">
+  <div class="container">
+    <h1>Emotion Analyzer</h1>
+
+    <div class="top-bar" ng-if="main.isLoggedIn()">
+      <div>
+        Logged in as <strong>{{ main.currentUser.username }}</strong>
+        <span class="badge">{{ main.currentUser.role | uppercase }}</span>
+      </div>
+      <button class="btn-secondary btn-small" ng-click="main.logout()">Logout</button>
+    </div>
+
+    <!-- Login page -->
+    <div class="card" ng-if="!main.isLoggedIn()">
+      <h3>Login</h3>
+      <form ng-submit="main.login()">
+        <label for="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          ng-model="main.loginData.username"
+          placeholder="admin or viewer"
+          required
+        />
+
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          ng-model="main.loginData.password"
+          placeholder=""
+          required
+        />
+
+        <button class="btn-primary" type="submit">Login</button>
+
+        <div class="error" ng-if="main.loginError">
+          {{ main.loginError }}
+        </div>
+      </form>
+
+     
+    </div>
+
+<!-- Admin page-->
+    <div ng-if="main.isLoggedIn() && main.isAdmin()">
+      <div class="card">
+        <h3>Analyze new text</h3>
+        <label for="text">Content</label>
+        <textarea
+          id="text"
+          ng-model="main.newText"
+          placeholder="Type or paste text here"
+        ></textarea>
+
+        <button
+          class="btn-primary"
+          ng-click="main.analyze()"
+          ng-disabled="main.loading"
+        >
+          {{ main.loading ? "Analyzing..." : "Analyze" }}
+        </button>
+
+        <div class="error" ng-if="main.analyzeError">
+          {{ main.analyzeError }}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Emotion table</h3>
+        <p style="font-size: 13px; color: #4b5563;">
+          Original text, AI summary, and detected emotion for each entry.
+        </p>
+
+        <table ng-if="main.emotions.length > 0">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Text</th>
+              <th>Summary</th>
+              <th>Emotion</th>
+            
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in main.emotions">
+              <td>{{ item.id }}</td>
+              <td>{{ item.text }}</td>
+              <td>{{ item.summary }}</td>
+              <td>
+                <span
+                  ng-class="{
+                    'emotion-positive': item.emotion === 'positive',
+                    'emotion-negative': item.emotion === 'negative',
+                    'emotion-neutral': item.emotion === 'neutral',
+                    'emotion-mixed': item.emotion === 'mixed'
+                  }"
+                >
+                  {{ item.emotion }}
+                </span>
+              </td>
+              
+            </tr>
+          </tbody>
+        </table>
+
+        <p ng-if="main.emotions.length === 0">
+          No entries yet. Analyze some text to populate the table.
+        </p>
+      </div>
+    </div>
+
+    <!-- Viewer page -->
+    <div ng-if="main.isLoggedIn() && main.isViewer()">
+      <div class="card">
+        <h3>Emotion table (view only)</h3>
+        <p style="font-size: 13px; color: #4b5563;">
+          You can only view the Emotion table. No edit or delete actions.
+        </p>
+
+        <table ng-if="main.emotions.length > 0">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Text</th>
+              <th>Summary</th>
+              <th>Emotion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in main.emotions">
+              <td>{{ item.id }}</td>
+              <td>{{ item.text }}</td>
+              <td>{{ item.summary }}</td>
+              <td>
+                <span
+                  ng-class="{
+                    'emotion-positive': item.emotion === 'positive',
+                    'emotion-negative': item.emotion === 'negative',
+                    'emotion-neutral': item.emotion === 'neutral',
+                    'emotion-mixed': item.emotion === 'mixed'
+                  }"
+                >
+                  {{ item.emotion }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p ng-if="main.emotions.length === 0">
+          No entries stored yet.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

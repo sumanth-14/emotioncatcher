@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "text": "A detailed description of data which carries an overwhelmingly negative emotion can be found in the sentiment analysis of social media content related to the 2022 Sri Lankan economic and political crisis.\nDataset Overview\nThe dataset consists of thousands of social media posts, primarily tweets, collected during the peak of the crisis. One specific analysis of 2,687 tweets using the hashtag #SriLankaEconomicCrisis found that an overwhelming 82.81% of the posts expressed a negative sentiment, with only 11.31% being positive and the remainder neutral. Another analysis of a different dataset of 1,555 tweets found an even higher proportion of negative content at 98.59%.\nContent and Emotional Themes\nThe content of these posts provides raw insight into the profound distress experienced by the population. The negative emotions were directly tied to tangible, severe hardships, including:\nShortages of essential goods: Tweets frequently mentioned the scarcity of food, fuel, and vital medicines, which had become \"hard-to-find luxuries\".\nEconomic despair: Common themes included mentions of depleted foreign exchange reserves, high, double-digit inflation (at times over 90%), loss of income, and the inability to meet basic family needs. Many households reported having to reduce meal portions or skip meals entirely.\nPolitical frustration and anger: The data also captured widespread anger and dissatisfaction directed at the government and public leadership, with many posts mentioning political instability and mass protests.\nHealth and well-being concerns: Users expressed anxiety about the impact of the crisis on physical health, mental health, and general quality of life, noting the strain on healthcare systems and the rise in malnutrition, especially among children.\nOverall Emotion\nThe data, through both quantitative metrics (high negative sentiment percentages) and qualitative content analysis, provides a vivid, large-scale picture of collective dissatisfaction, anxiety, anger, and fear. The sheer dominance of negative sentiment highlights a population in deep distress, making it a powerful example of a dataset with overwhelmingly negative emotional data.",
+    "summary": "The sentiment analysis of social media during the 2022 Sri Lankan crisis reveals overwhelming negative emotions tied to severe hardships.",
+    "emotion": "negative",
+    "createdBy": "TheAdmin",
+    "createdAt": "2025-11-05T21:11:32.983Z"
+  },
+  {
+    "id": 2,
+    "text": "The sun is shining, the birds are singing, and the air is full of a wonderful, infectious energy. Everything feels bright and full of possibility, and my heart is overflowing with gratitude for this beautiful day and all the simple joys it brings! Life is an incredible adventure.\"",
+    "summary": "The text expresses joy and gratitude for a beautiful day filled with positivity.",
+    "emotion": "positive",
+    "createdBy": "TheAdmin",
+    "createdAt": "2025-11-05T21:44:55.546Z"
+  }
+]
